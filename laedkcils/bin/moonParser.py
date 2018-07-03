@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
 import urllib
-import HTMLParser
+from html.parser import HTMLParser
 import sys
-from htmlentitydefs import entitydefs
+from html.entities import entitydefs
 
-class moonParser(HTMLParser.HTMLParser):
+class moonParser(HTMLParser):
     inDealBox = False
     inProdImage = False
     inPostText = False
@@ -19,7 +19,7 @@ class moonParser(HTMLParser.HTMLParser):
 
     def __init__(self):
         self.promo_hash = {}
-        HTMLParser.HTMLParser.__init__(self)
+        HTMLParser.__init__(self)
     
         self.inDealBox = False
         self.inProdImage = False
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     sys.setdefaultencoding('utf8')
 
     if len(sys.argv) < 2:
-        print "usage: %s filename" % sys.argv[0]
+        print("usage: ", sys.argv[0], " filename")
     else:
         filename = sys.argv[1]
         input = open(filename, "r")
@@ -85,5 +85,5 @@ if __name__ == '__main__':
         parser = moonParser()
         parser.feed(html)
         for title in parser.promo_hash:
-            print "%s\t%s\t%s" % (title, parser.promo_hash[title][0], parser.promo_hash[title][1])
+            print(title, "\t", parser.promo_hash[title][0], "\t", parser.promo_hash[title][1])
 

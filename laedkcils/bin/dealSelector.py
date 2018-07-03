@@ -41,13 +41,16 @@ class dealSelector:
         for line in iter(conf.readline, ''):
             if line[0:1] != '#':
                 line = line.rstrip()
+                line = line.lstrip()
                 words = line.split(' ')
 #                print "DEBUG: loading ignored words : %i [%s] %i" % (index, line, len(words))
                 self.ignored_group.append(len(words))
                 self.ignored_info.append(line)
+#                print "words %s" % line
                 for word in words:
                     if word not in self.ignored_word:
                         self.ignored_word[word] = [];
+#                        print "load %s" % word
                     self.ignored_word[word].append(index)
 #                    print "DEBUG: loading %s %i" % (word, index)
                 index += 1
@@ -59,6 +62,7 @@ class dealSelector:
         for line in iter(conf.readline, ''):
             if line[0:1] != '#':
                 line = line.rstrip()
+                line = line.lstrip()
 #                print "DEBUG: loading desired words : %s" % line
                 words = line.split(' ')
                 self.desired_group.append(len(words))
@@ -98,8 +102,10 @@ class dealSelector:
                 for index in self.desired_word[word]:
                     if index in index_count:
                         index_count[index] += 1
+#                        print "%s %d" % (word, index_count[index])
                     else:
                         index_count[index] = 1
+#                        print "%s 1" % word
                 
         for index in index_count:
             if index_count[index] >= self.desired_group[index]:
@@ -107,7 +113,9 @@ class dealSelector:
 
         # ignored word list
         index_count = {}
+#        print "title: %s" % title
         for word in words:
+#            print "checking: %s" % word
             if word in self.ignored_word:
 #                print "WHAT: word %s" % word
 #                print "WHAT: len ignored_word %i" % len(self.ignored_word[word])
@@ -133,11 +141,11 @@ class dealSelector:
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print "usage:"
+        print("usage:")
     else:
         selector = dealSelector()
         title = sys.argv[1]
         if selector.checkDeal(title):
-            print title
+            print(title)
         else:
-            print "filtered by %s" % selector.filter_rule
+            print ("filtered by \"%s\"" % selector.filter_rule)

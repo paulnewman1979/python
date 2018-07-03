@@ -1,8 +1,9 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
 import sys
 import os
-import urllib
+from urllib import request
+import http.client
 import getopt
 import re
 from datetime import datetime
@@ -20,9 +21,9 @@ price_match4 = re.compile('[0-9]+\$')
 price_match5 = re.compile('[0-9]+ off [0-9]+')
 
 def print_usage(cmd):
-    print "usage: %s [options]" % cmd
-    print "\t-t (local|web), web as default"
-    print "\t-d dir for local, necessary for type \"local\""
+    print("usage: %s [options]", cmd)
+    print("\t-t (local|web), web as default")
+    print("\t-d dir for local, necessary for type \"local\"")
 
 def getPrices(title):
     global price_match1
@@ -71,7 +72,8 @@ def record_filtered_deal(filtered_deal_hash):
     filtered_deal = open("../tmp/filtered.deal.txt", "w")
     for title in filtered_deal_hash:
         filtered_rule = filtered_deal_hash[title]
-        filtered_deal.write(title.encode("iso-8859-15", "replace"))
+        #filtered_deal.write(title.encode("iso-8859-15", "replace"))
+        filtered_deal.write(title);
         filtered_deal.write("\n\t")
         filtered_deal.write(filtered_rule)
         filtered_deal.write("\n")
@@ -97,17 +99,18 @@ def record_new_deal(new_deal_hash):
         new_deal.write(line)
     new_deal.close()
 
-def fetch_slick_images(url):
+def fetch_slick_images_new(url, conn):
     imageParser = sdImageParser()
-    web = urllib.urlopen(url)
-    html = web.read()
-    web.close()
-    imageParser.feed(html)
+    conn.request("GET", url)
+#    print("detail url %s" % url)
+    response = conn.getresponse()
+    html=response.read()
+    imageParser.feed(html.decode('latin1'))
     return imageParser.images
 
 def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
     imageParser = sdImageParser()
-    print "fetch_new_title_slick"
+    print("fetch_new_title_slick")
     selector = dealSelector()
     hasNewTitle = True
     index = 1
@@ -120,18 +123,21 @@ def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtere
         pass
 
     while hasNewTitle and index <= 30:
-        print "\tprocessing %i" % index
-        url='http://slickdeals.net/forums/forumdisplay.php?f=9&page={0}&order=desc&sort=lastpost'.format(index) 
-        web = urllib.urlopen(url)
-        html = web.read()
-        web.close()
+        print("\tprocessing ", index)
+        url='//forums/forumdisplay.php?f=9&page={0}&order=desc&sort=lastpost'.format(index) 
+        conn = http.client.HTTPSConnection("slickdeals.net")
+        conn.request("GET", url)
+        response = conn.getresponse()
+        if response.status != 200:
+            print(response.status, respones.reason)
+        html=response.read()
         filename = "../data/slickdeal/%s/%i.html" % (timestamp, index)
-        output = open(filename, "w")
+        output = open(filename, "wb")
         output.write(html)
         output.close()
 
         parser = sdParser()
-        parser.feed(html)
+        parser.feed(html.decode('latin1'))
         hasNewTitle = False
         for title in parser.promo_hash:
             if title not in old_title_hash:
@@ -145,14 +151,14 @@ def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtere
                     new_deal_hash[title].append(real_url)
                     new_deal_hash[title].append("")
                     new_deal_hash[title].append("")
-                    for image in fetch_slick_images(real_url):
+                    for image in fetch_slick_images_new(url, conn):
                         new_deal_hash[title].append(image)
                 else:
                     filtered_deal_hash[title] = selector.filter_rule
         index += 1
 
 def fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
-    print "fetch_new_title_sea"
+    print("fetch_new_title_sea")
     selector = dealSelector()
     hasNewTitle = True
     index = 1
@@ -165,18 +171,18 @@ def fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_
         pass
 
     while hasNewTitle and index <= 30:
-        print "\tprocessing %i" % index
+        print("\tprocessing ", index)
         url = 'http://dealsea.com/?page=%i' % index
         if index == 1:
             url = 'http://dealsea.com/'
-        html = urllib.urlopen(url).read()
+        html = request.urlopen(url).read()
         filename = "../data/dealsea/%s/%i.html" % (timestamp, index)
-        output = open(filename, "w")
+        output = open(filename, "wb")
         output.write(html)
         output.close()
 
         parser = seaParser()
-        parser.feed(html)
+        parser.feed(html.decode('latin1'))
         hasNewTitle = False
         for title in parser.promo_hash:
             if title not in old_title_hash:
@@ -198,7 +204,7 @@ def fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_
         index += 1
 
 def fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
-    print "fetch_new_title_wallet"
+    print("fetch_new_title_wallet")
     selector = dealSelector()
     hasNewTitle = True
     index = 1
@@ -210,17 +216,17 @@ def fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filter
     except:
         pass
 
-    while hasNewTitle and index <= 8:
-        print "\tprocessing %i" % index
+    while hasNewTitle and index <= 7:
+        print("\tprocessing ", index)
         url = 'http://www.fatwallet.com/?liststyle=grid&page=%i' % index
-        html = urllib.urlopen(url).read()
+        html = request.urlopen(url).read()
         filename = "../data/wallet/%s/%i.html" % (timestamp, index)
-        output = open(filename, "w")
+        output = open(filename, "wb")
         output.write(html)
         output.close()
 
         parser = walletParser()
-        parser.feed(html)
+        parser.feed(html.decode('latin1'))
         hasNewTitle = False
         for title in parser.promo_hash:
             if title not in old_title_hash:
@@ -243,7 +249,7 @@ def fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filter
         index += 1
 
 def fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
-    print "fetch_new_title_moon"
+    print("fetch_new_title_moon")
     selector = dealSelector()
     hasNewTitle = True
     index = 1
@@ -256,13 +262,13 @@ def fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered
         pass
 
     while hasNewTitle and index <= 30:
-        print "\tprocessing %i" % index
+        print("\tprocessing ", index)
         url = 'http://www.dealmoon.com/%i' % index
         if index == 1:
             url = 'http://www.dealmoon.com/'
-        html = urllib.urlopen(url).read()
+        html = request.urlopen(url).read()
         filename = "../data/dealmoon/%s/%i.html" % (timestamp, index)
-        output = open(filename, "w")
+        output = open(filename, "wb")
         output.write(html)
         output.close()
 
@@ -303,7 +309,7 @@ def train_old_web(run_dir, new_deal_hash, new_title_hash, filtered_deal_hash):
     for curdir, dirnames, filenames in os.walk(run_dir):
         for filename in filenames:
             fullname = "%s/%s" % (curdir, filename)
-            print "processing %s" % fullname
+            print("processing ", fullname)
             input = open(fullname, "r")
             html = input.read()
             input.close()
@@ -387,8 +393,8 @@ if __name__ == '__main__':
         print_usage(sys.argv[0])
         sys.exit(2)
         
-    reload(sys)
-    sys.setdefaultencoding('latin1')
+    #reload(sys)
+    #sys.setdefaultencoding('latin1')
 
     old_title_hash = {}
     new_deal_hash = {}
@@ -399,15 +405,15 @@ if __name__ == '__main__':
         load_old_title(old_title_hash)
         fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
         fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
-        fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
+#        fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
 #       fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
     else:
         load_old_title(old_title_hash)
         train_old_title(old_title_hash, new_deal_hash, filtered_deal_hash)
         #train_old_web(run_dir, new_deal_hash, new_title_hash, filtered_deal_hash)
 
-    reload(sys)
-    sys.setdefaultencoding('utf8')
+    #reload(sys)
+    #sys.setdefaultencoding('utf8')
 
     record_new_deal(new_deal_hash)
     compose_html(new_deal_hash)

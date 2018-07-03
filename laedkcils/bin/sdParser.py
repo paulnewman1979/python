@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-import HTMLParser
+from html.parser import HTMLParser
 import sys
-from htmlentitydefs import entitydefs
+from html.entities import entitydefs
 
-class sdParser(HTMLParser.HTMLParser):
+class sdParser(HTMLParser):
     inTitleLine = 0
     isDeal = 0
     inSpan = 0
@@ -15,7 +15,7 @@ class sdParser(HTMLParser.HTMLParser):
 
     def __init__(self):
         self.promo_hash = {}
-        HTMLParser.HTMLParser.__init__(self)
+        HTMLParser.__init__(self)
         self.isDeal = 0
 
     def handle_starttag(self, tag, attrs):
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     sys.setdefaultencoding('latin1')
 
     if len(sys.argv) < 2:
-        print "usage: %s filename" % sys.argv[0]
+        print("usage: ", sys.argv[0], " filename")
         sys.exit(1)
         
     filename = sys.argv[1];
@@ -71,5 +71,5 @@ if __name__ == '__main__':
     parser.feed(html)
     for title in parser.promo_hash:
         line = "%s\t%s" % (title, parser.promo_hash[title][0])
-        print line
+        print(line)
 
