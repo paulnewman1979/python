@@ -145,7 +145,7 @@ def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtere
                 hasNewTitle = True
                 url = parser.promo_hash[title][0]
                 new_title_hash[title] = url
-                if selector.checkDeal(title):
+                if selector.checkDeal(title, False):
                     new_deal_hash[title] = []
                     real_url = "http://slickdeals.net" + url
                     new_deal_hash[title].append(real_url)
@@ -154,7 +154,7 @@ def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtere
                     for image in fetch_slick_images_new(url, conn):
                         new_deal_hash[title].append(image)
                 else:
-                    filtered_deal_hash[title] = selector.filter_rule
+                    filtered_deal_hash[title] = selector.filterRule
         index += 1
 
 def fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
@@ -190,7 +190,7 @@ def fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_
                 url = parser.promo_hash[title][0]
                 new_title_hash[title] = url
                 old_title_hash[title] = url
-                if selector.checkDeal(title):
+                if selector.checkDeal(title, False):
                     new_deal_hash[title] = []
                     new_deal_hash[title].append("http://dealsea.com" + url)
                     new_deal_hash[title].append("")
@@ -200,7 +200,7 @@ def fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_
                         new_deal_hash[title].append(parser.promo_hash[title][i])
                         i += 1
                 else:
-                    filtered_deal_hash[title] = selector.filter_rule
+                    filtered_deal_hash[title] = selector.filterRule
         index += 1
 
 def fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
@@ -234,7 +234,7 @@ def fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filter
                 url = parser.promo_hash[title][0]
                 new_title_hash[title] = url
                 old_title_hash[title] = url
-                if selector.checkDeal(title):
+                if selector.checkDeal(title, False):
                     new_deal_hash[title] = []
                     new_deal_hash[title].append(url)
                     new_deal_hash[title].append(parser.promo_hash[title][1])
@@ -281,7 +281,7 @@ def fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered
                 url = parser.promo_hash[title][0]
                 new_title_hash[title] = url
                 old_title_hash[title] = url
-                if selector.checkDeal(title):
+                if selector.checkDeal(title, False):
                     new_deal_hash[title] = []
                     new_deal_hash[title].append(url)
                     new_deal_hash[title].append("")
@@ -297,7 +297,7 @@ def fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered
 def train_old_title(old_title_hash, new_deal_hash, filtered_deal_hash):
     selector = dealSelector()
     for title in old_title_hash:
-         if selector.checkDeal(title):
+         if selector.checkDeal(title, False):
              url = old_title_hash[title]
              new_deal_hash[title] = []
              new_deal_hash[title].append(url)
@@ -317,7 +317,7 @@ def train_old_web(run_dir, new_deal_hash, new_title_hash, filtered_deal_hash):
             parser = sdParser()
             parser.feed(html)
             for title in parser.promo_hash:
-                if selector.checkDeal(title):
+                if selector.checkDeal(title, False):
                     url = parser.promo_hash[title]
                     new_deal_hash[title] = url
                 else:

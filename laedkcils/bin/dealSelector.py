@@ -5,33 +5,33 @@ import os
 import re
 
 class dealSelector:
-    ignored_title = {}
+    ignoredTitle = {}
 
-    ignored_word = {}
-    ignored_group = []
-    ignored_info = []
+    ignoredWord = {}
+    ignoredGroup = []
+    ignoredInfo = []
 
-    desired_word = {}
-    desired_group = []
+    desiredWord = {}
+    desiredGroup = []
 
-    filter_rule = ""
+    filterRule = ""
 
     def __init__(self):
-        self.ignored_title = {}
+        self.ignoredTitle = {}
 
-        self.ignored_word = {}
-        self.ignored_group = []
-        self.ignored_info = []
+        self.ignoredWord = {}
+        self.ignoredGroup = []
+        self.ignoredInfo = []
 
-        self.desired_word = {}
-        self.desired_group = []
+        self.desiredWord = {}
+        self.desiredGroup = []
 
-        self.filter_rule = ""
+        self.filterRule = ""
 
         conf = open("../conf/ignore.title.conf", "r")
         for line in iter(conf.readline, ''):
             line = line.rstrip()
-            self.ignored_title[line] = 1
+            self.ignoredTitle[line] = 1
 #            print "DEBUG: loading ignored title %s" % line
         conf.close()
 #        print ""
@@ -43,16 +43,16 @@ class dealSelector:
                 line = line.rstrip()
                 line = line.lstrip()
                 words = line.split(' ')
-#                print "DEBUG: loading ignored words : %i [%s] %i" % (index, line, len(words))
-                self.ignored_group.append(len(words))
-                self.ignored_info.append(line)
-#                print "words %s" % line
+#                print("DEBUG: loading ignored words : %i [%s] %i" % (index, line, len(words)))
+                self.ignoredGroup.append(len(words))
+                self.ignoredInfo.append(line)
+#                print("words %s" % line)
                 for word in words:
-                    if word not in self.ignored_word:
-                        self.ignored_word[word] = [];
-#                        print "load %s" % word
-                    self.ignored_word[word].append(index)
-#                    print "DEBUG: loading %s %i" % (word, index)
+                    if word not in self.ignoredWord:
+                        self.ignoredWord[word] = [];
+#                        print("load %s" % word)
+                    self.ignoredWord[word].append(index)
+#                    print("DEBUG: loading %s %i" % (word, index))
                 index += 1
         conf.close()
 #        print ""
@@ -63,19 +63,19 @@ class dealSelector:
             if line[0:1] != '#':
                 line = line.rstrip()
                 line = line.lstrip()
-#                print "DEBUG: loading desired words : %s" % line
+#                print("DEBUG: loading desired words : %s" % line)
                 words = line.split(' ')
-                self.desired_group.append(len(words))
+                self.desiredGroup.append(len(words))
                 for word in words:
-                    if not word in self.desired_word:
-                        self.desired_word[word] = [];
-                    self.desired_word[word].append(index)
+                    if not word in self.desiredWord:
+                        self.desiredWord[word] = [];
+                    self.desiredWord[word].append(index)
                 index += 1
         conf.close()
 #        print ""
 
-    def checkDeal(self, title):
-        if title in self.ignored_title:
+    def checkDeal(self, title, enableDebug = False):
+        if title in self.ignoredTitle:
             return False
 
         title = title.lower()
@@ -96,56 +96,79 @@ class dealSelector:
         words = title.split(" ");
 
         # desired word list
-        index_count = {}
+        indexCount = {}
         for word in words:
-            if word in self.desired_word:
-                for index in self.desired_word[word]:
-                    if index in index_count:
-                        index_count[index] += 1
-#                        print "%s %d" % (word, index_count[index])
+            if word in self.desiredWord:
+                for index in self.desiredWord[word]:
+                    if index in indexCount:
+                        indexCount[index] += 1
+                        if enableDebug:
+                            print("%s %d" % (word, indexCount[index]))
                     else:
-                        index_count[index] = 1
-#                        print "%s 1" % word
+                        indexCount[index] = 1
+                        if enableDebug:
+                            print("%s 1" % word)
                 
-        for index in index_count:
-            if index_count[index] >= self.desired_group[index]:
+        for index in indexCount:
+            if indexCount[index] >= self.desiredGroup[index]:
                 return True;
 
         # ignored word list
-        index_count = {}
-#        print "title: %s" % title
+        indexCount = {}
+        sameWordCount = {}
+        if enableDebug:
+            print("DEBUG: title is \"%s\"" % title)
         for word in words:
-#            print "checking: %s" % word
-            if word in self.ignored_word:
-#                print "WHAT: word %s" % word
-#                print "WHAT: len ignored_word %i" % len(self.ignored_word[word])
-                for index in self.ignored_word[word]:
-#                    print "WHAT: %i" % index
-                    if index in index_count:
-                        index_count[index] += 1
-                    else:
-                        index_count[index] = 1
+            if enableDebug:
+                print("DEBUG: check \"%s\"" % word)
+            if word in self.ignoredWord:
+                if enableDebug:
+                    print("DEBUG: \"%s\" is in ignored word list" % word)
+                    print("DEBUG: ignored phrase length is %i" % len(self.ignoredWord[word]))
+                if word not in sameWordCount:
+                    if enableDebug:
+                        print("DEBUG: \"%s\" new word" % word)
+                    for index in self.ignoredWord[word]:
+                        if index in indexCount:
+                            indexCount[index] += 1
+                        else:
+                            indexCount[index] = 1
+                        if enableDebug:
+                            print("DEBUG: \"%s\" in ignored phrase %i, count=%i" % (word, index, indexCount[index]))
+                else:
+                    print("DEBUG: \"%s\" duplicate" % word)
+                    sameWordCount[word] = 1
 
-        for index in index_count:
-            if index_count[index] >= self.ignored_group[index]:
-#                print "DEBUG : title = %s" % title
-#                print "DEBUG : WHAT %i >= %i" % (index_count[index], self.ignored_group[index])
-#                print "DEBUG: filtered by %i [%s]" % (index, self.ignored_info[index])
-#                print "\tfiltered by %i [%s]" % (index, self.ignored_info[index])
-                self.filter_rule = self.ignored_info[index]
+        if enableDebug:
+            print("DEBUG: validation")
+        for index in indexCount:
+            if enableDebug:
+                print("DEBUG: title = %s" % title)
+                print("DEBUG: rule = %s" % self.ignoredInfo[index])
+            if indexCount[index] >= self.ignoredGroup[index]:
+                if enableDebug:
+                    print("DEBUG: \"%i\" >= \"%i\"" % (indexCount[index], self.ignoredGroup[index]))
+                    print("DEBUG: filtered by %i [%s]" % (index, self.ignoredInfo[index]))
+                self.filterRule = self.ignoredInfo[index]
                 return False;
+            else:
+                if enableDebug:
+                    print("DEBUG: \"%i\" < \"%i\"" % (indexCount[index], self.ignoredGroup[index]))
 
         return True;
 
 
 
 if __name__ == '__main__':
+    enableDebug = False
     if len(sys.argv) < 2:
         print("usage:")
     else:
         selector = dealSelector()
         title = sys.argv[1]
-        if selector.checkDeal(title):
+        if len(sys.argv) > 2:
+            enableDebug = True
+        if selector.checkDeal(title, enableDebug):
             print(title)
         else:
-            print ("filtered by \"%s\"" % selector.filter_rule)
+            print ("filtered by \"%s\"" % selector.filterRule)
