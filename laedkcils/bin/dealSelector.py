@@ -135,8 +135,10 @@ class dealSelector:
                             indexCount[index] = 1
                         if enableDebug:
                             print("DEBUG: \"%s\" in ignored phrase %i, count=%i" % (word, index, indexCount[index]))
+                    sameWordCount[word] = 1
                 else:
-                    print("DEBUG: \"%s\" duplicate" % word)
+                    if enableDebug:
+                        print("DEBUG: \"%s\" duplicate" % word)
                     sameWordCount[word] = 1
 
         if enableDebug:
