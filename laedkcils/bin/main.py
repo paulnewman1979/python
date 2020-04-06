@@ -8,7 +8,9 @@ import getopt
 import re
 from datetime import datetime
 from sdParser import sdParser
+from bradsParser import bradsParser
 from sdImageParser import sdImageParser
+from dealwikiParser import dealwikiParser
 from dealSelector import dealSelector
 from seaParser import seaParser
 from moonParser import moonParser
@@ -153,6 +155,109 @@ def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtere
                     new_deal_hash[title].append("")
                     for image in fetch_slick_images_new(url, conn):
                         new_deal_hash[title].append(image)
+                else:
+                    filtered_deal_hash[title] = selector.filterRule
+        index += 1
+
+def fetch_new_title_dealwiki(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
+    imageParser = sdImageParser()
+    print("fetch_new_title_dealwiki")
+    selector = dealSelector()
+    hasNewTitle = True
+    index = 1
+    cur = datetime.now()
+    timestamp = "%i" % ( ( ( cur.year * 100 + cur.month) * 100 + cur.day ) * 100 + cur.hour )
+    dirname = "../data/dealwiki/%s" % timestamp
+    try:
+        os.mkdir(dirname)
+    except:
+        pass
+
+    while hasNewTitle and index <= 3:
+        print("\tprocessing ", index)
+        url='/?p={0}'.format(index) 
+        conn = http.client.HTTPSConnection("dealwiki.net")
+        conn.request("GET", url)
+        response = conn.getresponse()
+        if response.status != 200:
+            print(response.status, respones.reason)
+        html=response.read()
+        filename = "../data/dealwiki/%s/%i.html" % (timestamp, index)
+        output = open(filename, "wb")
+        output.write(html)
+        output.close()
+
+        parser = dealwikiParser()
+        parser.feed(html.decode('latin1'))
+        hasNewTitle = False
+        for title in parser.promo_hash:
+            if title not in old_title_hash:
+                old_title_hash[title] = url
+                hasNewTitle = True
+                url = parser.promo_hash[title][0]
+                new_title_hash[title] = url
+                if selector.checkDeal(title, False):
+                    new_deal_hash[title] = []
+                    new_deal_hash[title].append(url)
+                    new_deal_hash[title].append("")
+                    new_deal_hash[title].append("")
+                    i = 1
+                    while i < len(parser.promo_hash[title]):
+                        new_deal_hash[title].append(parser.promo_hash[title][i])
+                        i += 1
+                else:
+                    filtered_deal_hash[title] = selector.filterRule
+        index += 1
+
+
+
+def fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
+    imageParser = sdImageParser()
+    print("fetch_new_title_brads")
+    selector = dealSelector()
+    hasNewTitle = True
+    index = 1
+    cur = datetime.now()
+    timestamp = "%i" % ( ( ( cur.year * 100 + cur.month) * 100 + cur.day ) * 100 + cur.hour )
+    dirname = "../data/bradsdeal/%s" % timestamp
+    try:
+        os.mkdir(dirname)
+    except:
+        pass
+
+    while hasNewTitle and index <= 30:
+        print("\tprocessing ", index)
+        url='deals?page={0}'.format(index) 
+        conn = http.client.HTTPSConnection("www.bradsdeals.com")
+        conn.request("GET", url)
+        response = conn.getresponse()
+        if response.status != 200:
+            print(response.status, respones.reason)
+        html=response.read()
+        filename = "../data/bradsdeal/%s/%i.html" % (timestamp, index)
+        output = open(filename, "wb")
+        output.write(html)
+        output.close()
+
+        parser = bradsParser()
+        parser.feed(html.decode('latin1'))
+        hasNewTitle = False
+        for title in parser.promo_hash:
+            if title not in old_title_hash:
+                old_title_hash[title] = url
+                hasNewTitle = True
+                url = parser.promo_hash[title][0]
+                new_title_hash[title] = url
+                if selector.checkDeal(title, False):
+                    new_deal_hash[title] = []
+                    real_url = "http://bradsdeals.com" + url
+                    new_deal_hash[title].append(real_url)
+                    new_deal_hash[title].append("")
+                    new_deal_hash[title].append("")
+                    i = 1
+                    while i < len(parser.promo_hash[title]):
+                        new_deal_hash[title].append(parser.promo_hash[title][i])
+                        i += 1
                 else:
                     filtered_deal_hash[title] = selector.filterRule
         index += 1
@@ -405,6 +510,8 @@ if __name__ == '__main__':
         load_old_title(old_title_hash)
         fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
         fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
+        fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
+        fetch_new_title_dealwiki(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
 #        fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
 #       fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
     else:
