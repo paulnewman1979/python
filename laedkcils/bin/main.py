@@ -126,12 +126,13 @@ def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtere
 
     while hasNewTitle and index <= 30:
         print("\tprocessing ", index)
-        url='//forums/forumdisplay.php?f=9&page={0}&order=desc&sort=lastpost'.format(index) 
-        conn = http.client.HTTPSConnection("slickdeals.net")
+        url='/forums/filtered/?f=9&page={0}&order=desc&sort=lastpost&icid=filtered_user'.format(index) 
+        conn = http.client.HTTPSConnection("slickdeals.net",timeout=100)
+
         conn.request("GET", url)
         response = conn.getresponse()
         if response.status != 200:
-            print(response.status, respones.reason)
+            print(response.status)
         html=response.read()
         filename = "../data/slickdeal/%s/%i.html" % (timestamp, index)
         output = open(filename, "wb")
@@ -232,7 +233,7 @@ def fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtere
         conn.request("GET", url)
         response = conn.getresponse()
         if response.status != 200:
-            print(response.status, respones.reason)
+            print(response.status)
         html=response.read()
         filename = "../data/bradsdeal/%s/%i.html" % (timestamp, index)
         output = open(filename, "wb")
@@ -508,9 +509,9 @@ if __name__ == '__main__':
 
     if run_type == 'web':
         load_old_title(old_title_hash)
+        fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
         fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
         fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
-        fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
         fetch_new_title_dealwiki(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
 #        fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
 #       fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
