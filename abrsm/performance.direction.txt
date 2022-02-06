@@ -1,0 +1,179 @@
+1	gradually getting quicker	accelerando	accel.
+1	slow	adagio
+1	fairly quick (but not as quick as allegro)	allegretto
+1	quick (literally 'cheerful')	allegro
+1	at a medium ('walking') speed	andante
+1	in a singing style	cantabile
+1	gradually getting louder	crescendo	cresc.
+1	repeat from the beginning	da capo	D.C.
+1	repeat from the sign %S%	dal segno	D.S.
+1	gradually getting quieter	descrescendo	decresc.
+1	gradually getting quieter	diminuendo	dim.
+1	the end	fine
+1	loud	f	forte
+1	very loud	ff	fortissimo
+1	smoothly	legato
+1	slow	lento
+1	half	mezzo
+1	moderately loud (literally 'half' loud')	mf	mezzo forte
+1	moderately quiet (literally 'half' quiet)	mp	mezzo piano
+1	moderately	moderato
+1	quiet	p	piano
+1	very quiet	pp	pianissimo
+1	a little	poco
+1	gradually getting slower	rallentando	rall.
+1	gradually getting slower	ritardando	ritard.	rit.
+1	held back	ritenuto	riten.	rit.
+1	detached	staccato	stacc.
+1	speed; time	tempo
+2	at, to, by, for, in, in the style of	a
+2	to the, in the manner of	al	alla
+2	broadening (getting a little slower and probablly a little louder)	allargando
+2	slightly faster than Andante (but may also mean slightly slower)	andantino
+2	very	assai
+2	with	con	col
+2	sweet, soft	doice
+2	and	e	ed
+2	expressive	espressivo	express.	espr.
+2	loud, then immediately soft	fp	fortepiano
+2	palyful, merry	giocoso
+2	very slow	solemngrave
+2	graceful	grazioso
+2	rather slow (but not as slow as largo)	larghetto
+2	slow, stately	largo
+2	but	ma
+2	majestic	maestoso
+2	less	meno
+2	very, much	molto
+2	movement	mosso	moto
+2	not	non
+2	more	piu
+2	fast (fater than Allegro)	presto
+2	without	senza
+2	forced, accented	sf	sfz	sfozando	sfozato
+2	in the same way	simile	sim.
+2	sustained	sostenuto
+2	held	tenuto
+2	too much	troppo
+2	lively, quick	vivace	vivo
+3	rather slow (but faster than adagio)	adagietto
+3	at choice, meaning that a passage may be played freely	ad libitum	ad lib.
+3	agitated	agitato
+3	with a minum beat, equivalent to 2/2, implying a faster tempo than the note value might otherwise suggest	alla breve
+3	love	amore
+3	soul, spirit	anima
+3	animated, lively	animato
+3	well	ben
+3	vigour	brio
+3	convenient	comodo
+3	with determination	deciso
+3	delicate	delicato
+3	energetic	energico
+3	force	forza
+3	broadly	largamente
+3	light, nimble	leggiero
+3	emphatic, accented	marcato	marc.
+3	in a military style	marziale
+3	sad	mesto
+3	heavy	pesante
+3	first	prima	primo
+3	bold, strong	risoluto
+3	rhythmically	ritmico
+3	with some freedom of time	rubato	tempo rubato
+3	playful, joking	scherzando	scherzoso
+3	second	seconda	asecondo
+3	simple 	plainsemplice
+3	always	sempre
+3	gradually getting faster	stringendo
+3	suddenly	subito
+3	so much	tanto
+3	calm	tranquillo
+3	sad, sorrowful	triste	tristamente
+3	time	volta
+4	with mutes	con sordini	con sord.
+4	without mutes	senza sordini	senza sord.
+4	play with the bow (a direction after pizzicato)	arco
+4	'down' bow	|_|
+4	'up' bow	V
+4	plucked	pizzicato
+4	play on the G string	sul G
+4	play near the bridge	sul ponticello
+4	press the left pedal	una corda
+4	release the left pedal	tre conde
+4	press/release the right pedal	P____|
+4	hand	mano
+4	spreed the notes of a chord quickly, starting from the bottom note	veritical ~
+4	tenderly	affettuoso
+4	hurrying	affetuoso
+4	amiable, pleasant	ffrettando
+4	with passion	amabile
+4	getting softer, dying away (and usually slowing down)	calando
+4	singing	cantando
+4	as, similar to	come
+4	easy	facile
+4	fire	fuoco
+4	proper, exact	glusto
+4	the same	l'istesso
+4	dying away	morendo
+4	nothing	niente
+4	nobly	nobilmente
+4	dying away	perdendosi1
+4	possible	possibile
+4	as if, resembling	quasi
+4	resonatn, with rich tone	sonoro
+4	above	sopra
+4	below	sotto
+4	swift	veloce
+4	voice	voce
+4	to, at	a, ^a
+4	animated, lively	anime, anim^e
+4	enough, sufficiently	ssez
+4	with	avec
+4	yield, relax the speed	cedez, c^edez
+4	sweet	douce
+4	prominent (a direction to make a melody stand out)	en dehors
+4	and	et
+4	light	legerement, l^eg^erement
+4	slow	lent
+4	but	mais
+4	less	moins
+4	at a moderate speed	modere, mod^er^e
+4	not	non
+4	little	peu
+4	more	plus
+4	hurry	presser
+4	slow down	ralentir
+4	held back	retenu
+4	without	sans
+4	very	tres, tr^es
+4	one	un	une
+4	lively	vif
+4	quick	vite
+5	to nothing	a niente
+5	dying away	morendo
+5	dying away	perdendosi
+5	reinforcing	rinforzando	rinf.
+5	dying away	smorzando	smorz.
+5	in an undertone (literally 'under the voice')	sotto voce
+5	broadly	largamente
+5	singing	cantando
+5	with grief	con dolore
+5	with spirit	con spirito
+5	sorrowful	doloroso
+5	resonant, with rich tone (like the word "sonorous')	sonoro
+5	at choice	ad libitum	ad lib.
+5	go straight on (to the next part of the music)	attacca
+5	as if, resembling	quasi
+5	slow, similar to Adagio/lento	langsam
+5	lively, similar to vivace	lebhaft
+5	at a moderate speed, similar to moderato	massig
+5	peaceful, similar to tranquillo	ruhig
+5	fast, similar to allegro/presto	schnell
+5	sad, similar to mesto	traurig
+5	press the right pedal (the sustain pedal)	Ped. or *
+5	with the right pedal	con pedale
+5	without the right pedal	senza pedale
+5	press the left pedal	una corda
+5	release the left pedal	tre conde
+5	with the left hand	mano sinistra	m.s.
+5	with the right hand	mano destra	m.d.
