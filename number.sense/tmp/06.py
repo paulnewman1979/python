@@ -1,0 +1,1 @@
+../func/digit_06.py

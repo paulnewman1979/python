@@ -1,6 +1,7 @@
 import random
 
 def add100():
+    """add round to hundreds"""
     val1 = random.randint(300, 500)
     val2 = random.randint(1, 3) * 100 - random.randint(1, 3)
     expectedVal = val1 + val2
@@ -8,6 +9,7 @@ def add100():
     return (query, expectedVal)
 
 def sub100():
+    """sub round to hundreds"""
     val2 = random.randint(1, 3) * 100 - random.randint(1, 3)
     val1 = val2 + random.randint(100, 300)
     expectedVal = val1 - val2

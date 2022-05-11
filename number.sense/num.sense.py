@@ -17,7 +17,10 @@ import add_sub_dist_08
 import round_09
 import square_cubic_power_10
 import mul5_11
+import roman_12
 import absquare_13
+import gcd_lcm_16
+import fraction_compare_19
 
 
 if __name__ == "__main__":
@@ -54,7 +57,10 @@ if __name__ == "__main__":
         round_09.round_digit,
         square_cubic_power_10.power,
         mul5_11.mul5,
-        absquare_13.aSquareBSquare1
+        roman_12.roman,
+        absquare_13.absquare,
+        gcd_lcm_16.gcd_lcm,
+        fraction_compare_19.fraction_compare,
     ]
     #funArrayNames = [ fun.__name__ for fun in funArray ]
     funArrayNames = [ fun.__doc__ for fun in funArray ]
@@ -71,7 +77,6 @@ if __name__ == "__main__":
         answers["interests"].append("all")
     for fun in funArray:
         for name in answers["interests"]:
-            #if fun.__name__ == name:
             if name == "all" or fun.__doc__ == name:
                 choiceFunArray.append(fun)
 
@@ -92,28 +97,46 @@ if __name__ == "__main__":
         funIndex = random.randint(0, funLen - 1)
         fun = choiceFunArray[funIndex]
         (query, expectedVal) = fun()
+        print(f"expectedVal={expectedVal}")
         try:
-            value = int(input("\n\n" + query))
+            strValue = input("\n\n" + query)
+            pos1 = strValue.find("/")
+            if pos1 != -1: # fraction
+                pos2 = strValue.find(" ")
+                if pos2 != -1: # with whole number
+                    value = [int(strValue[0:pos2]),
+                            int(strValue[pos2 + 1:pos1]),
+                            int(strValue[pos1 + 1:])]
+                else:
+                    value = [0,
+                            int(strValue[0:pos1]),
+                            int(strValue[pos1+1:])]
+            else:
+                value = int(strValue)
         except:
             value = 1
         if testMode:
-            if (type(expectedVal) is list and value >= expectedVal[0] and value <= expectedVal[1]) or \
-                    (type(expectedVal) is not list and value == expectedVal):
+            if (type(expectedVal) is list and len(expectedVal) == 2 and value >= expectedVal[0] and value <= expectedVal[1]) or \
+                (type(expectedVal) is list and len(expectedVal) == 3 and value[0] == expectedVal[0] and value[1] == expectedVal[1] and value[2] == expectedVal[2]) or \
+                (type(expectedVal) is not list and value == expectedVal):
                 correct += 1
                 cr.append((query, expectedVal, value)) 
             else:
                 wrong += 1
                 wr.append((query, expectedVal, value)) 
         else:
-            if (type(expectedVal) is list and value >= expectedVal[0] and value <= expectedVal[1]) or \
-                    (type(expectedVal) is not list and value == expectedVal):
+            if (type(expectedVal) is list and len(expectedVal) == 2 and value >= expectedVal[0] and value <= expectedVal[1]) or \
+                (type(expectedVal) is list and len(expectedVal) == 3 and value[0] == expectedVal[0] and value[1] == expectedVal[1] and value[2] == expectedVal[2]) or \
+                (type(expectedVal) is not list and value == expectedVal):
                 correct += 1
             else:
                 wrong += 1
-            while ((type(expectedVal) is list and (value < expectedVal[0] or value > expectedVal[1])) or \
-                    (type(expectedVal) is not list and value != expectedVal)) and value != -1:
+            while ((type(expectedVal) is list and len(expectedVal) == 2 and (value < expectedVal[0] or value > expectedVal[1])) or \
+                (type(expectedVal) is list and len(expectedVal) == 3 and value[0] == expectedVal[0] and value[1] == expectedVal[1] and value[2] == expectedVal[2]) or \
+                (type(expectedVal) is not list and value != expectedVal)) and value != -1:
                 try:
-                    value = int(input("\n\ntry it again, " + query))
+                    strValue = input("\n\ntry it again, " + query)
+                    value = int(strValue)
                 except:
                     value = 1
         cur = int(time.time())

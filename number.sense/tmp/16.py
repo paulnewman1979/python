@@ -1,0 +1,1 @@
+../func/gcd_lcm_16.py
