@@ -1,1 +1,0 @@
-../func/square_cubic_power_10.py

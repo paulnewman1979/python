@@ -11,13 +11,13 @@ def round_digit():
     qDigit = random.randint(1, maxDigit - 1)
     if qDigit == 1:
         qDigit = "ten"
-        expectedVal = round((value/10)+0.00001, 0) * 10
+        expectedVal = round(int((value/10)+0.00001), 0) * 10
     elif qDigit == 2:
         qDigit = "hundred"
-        expectedVal = round((value/100)+0.00001, 0) * 100
+        expectedVal = round(int((value/100)+0.00001), 0) * 100
     else:
         qDigit = "thousand"
-        expectedVal = round((value/1000)+0.00001, 0) * 1000
+        expectedVal = round(((value/1000)+0.00001), 0) * 1000
     query = f"{value} rounded to the nearest {qDigit} is\n"
     return (query, expectedVal)
 

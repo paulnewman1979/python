@@ -1,7 +1,7 @@
 import random
 import common
 
-def mul5():
+def mul_5():
 
     """multiply 5, 15, 25, 125, ..."""
 

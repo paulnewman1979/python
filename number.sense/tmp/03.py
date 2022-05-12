@@ -1,1 +1,0 @@
-../func/mul_div_03.py

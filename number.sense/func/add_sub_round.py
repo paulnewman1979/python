@@ -1,7 +1,9 @@
 import random
 
-def add100():
+def add_sub_round():
+
     """add round to hundreds"""
+
     val1 = random.randint(300, 500)
     val2 = random.randint(1, 3) * 100 - random.randint(1, 3)
     expectedVal = val1 + val2

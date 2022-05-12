@@ -35,12 +35,24 @@ def get_gcd(val1, val2):
 
 def is_mutual_prime(val1, val2):
     gcd = get_gcd(val1, val2)
-    return 1 if gcd == 1 else 0
+    return True if gcd == 1 else False
 
 def two_factors(val):
-    val1 = val // 2
+    val1 = int(math.sqrt(val))
     while val1 >= 2:
         if val % val1 == 0:
             return [val1, (val // val1)]
         val1 += 1
+
+def get_factors(val):
+    factors = list()
+    i = 1
+    while i <= val:
+        if val % i == 0:
+            factors.append(i)
+        i += 1
+    return factors
+    
+
+
 
