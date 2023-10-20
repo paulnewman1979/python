@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
 from html.parser import HTMLParser
 import sys
@@ -10,6 +10,7 @@ class sdParser(HTMLParser):
     inSpan = 0
 
     url = ""
+    backUrl = ""
     title = ""
     promo_hash = {}
 
@@ -26,8 +27,13 @@ class sdParser(HTMLParser):
                 if name == 'class' and value == 'threadtitleline':
                     self.inTitleLine = 1
         elif tag == 'span':
-            self.inSpan = 1;
-        elif tag == "a" and self.inTitleLine == 1 and self.inSpan == 0:
+            for name, value in attrs:
+                if name == 'class':
+                    if value == 'blueprint':
+                        self.inSpan = 1
+                    else:
+                        self.inSpan = 0
+        elif tag == "a" and self.inTitleLine == 1 and self.inSpan == 1:
             for name, value in attrs:
                 if name == 'href':
                     self.url = value

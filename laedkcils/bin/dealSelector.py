@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
 import sys
 import os
@@ -92,8 +92,12 @@ class dealSelector:
         title = title.replace("@", " ")
         title = title.replace("[", " ")
         title = title.replace("]", " ")
+        title = re.sub("  *", " ", title)
 
         words = title.split(" ");
+
+        if enableDebug:
+            print(f"clean title = \"{title}\"")
 
         # desired word list
         indexCount = {}

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
 import urllib
 from html.parser import HTMLParser
@@ -16,6 +16,7 @@ class bradsParser(HTMLParser):
     url = ''
     title = ''
     promo_hash = {}
+    prodImage = ''
 
     def __init__(self):
         self.promo_hash = {}
@@ -37,9 +38,9 @@ class bradsParser(HTMLParser):
                 if name == 'class':
                     if value == 'row':
                         self.inDealBox = True
-                    elif value == 'col large-5 medium-5 product small-12':
+                    elif value == 'product col large-5 medium-5 small-12':
                         self.inProdImage = True
-                    elif value == 'col information large-7 medium-7 small-12':
+                    elif value == 'information col large-7 medium-7 small-12':
                         self.inDealContent = True
                         self.content = ''
                     elif value == 'advertiser-disclosure-link' or value == 'flag':
@@ -91,8 +92,8 @@ class bradsParser(HTMLParser):
             self.handle_data('&'+name+';') 
 
 if __name__ == '__main__':
-    reload(sys)
-    sys.setdefaultencoding('utf8')
+    # reload(sys)
+    # sys.setdefaultencoding('utf8')
 
     if len(sys.argv) < 2:
         print('usage: ', sys.argv[0], ' filename')
