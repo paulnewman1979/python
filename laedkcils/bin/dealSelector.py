@@ -92,6 +92,7 @@ class dealSelector:
         title = title.replace("@", " ")
         title = title.replace("[", " ")
         title = title.replace("]", " ")
+        title = title.replace("!", " ")
         title = re.sub("  *", " ", title)
 
         words = title.split(" ");
