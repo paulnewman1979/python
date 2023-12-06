@@ -10,13 +10,14 @@ class dealSelector:
     ignoredWord = {}
     ignoredGroup = []
     ignoredInfo = []
+    ignoredInfoUsedCount = {}
 
     desiredWord = {}
     desiredGroup = []
 
     filterRule = ""
 
-    def __init__(self):
+    def __init__(self, ignoredInfoUsedCount=None):
         self.ignoredTitle = {}
 
         self.ignoredWord = {}
@@ -25,6 +26,7 @@ class dealSelector:
 
         self.desiredWord = {}
         self.desiredGroup = []
+        self.ignoredInfoUsedCount = ignoredInfoUsedCount
 
         self.filterRule = ""
 
@@ -32,9 +34,11 @@ class dealSelector:
         for line in iter(conf.readline, ''):
             line = line.rstrip()
             self.ignoredTitle[line] = 1
-#            print "DEBUG: loading ignored title %s" % line
         conf.close()
-#        print ""
+
+        newCount = False if self.ignoredInfoUsedCount else True
+        if newCount:
+            self.ignoredInfoUsedCount = dict()
 
         conf = open("../conf/ignore.word.conf", "r")
         index = 0
@@ -42,20 +46,17 @@ class dealSelector:
             if line[0:1] != '#':
                 line = line.rstrip()
                 line = line.lstrip()
+                if line not in self.ignoredInfoUsedCount or newCount:
+                    self.ignoredInfoUsedCount[line] = 0
                 words = line.split(' ')
-#                print("DEBUG: loading ignored words : %i [%s] %i" % (index, line, len(words)))
                 self.ignoredGroup.append(len(words))
                 self.ignoredInfo.append(line)
-#                print("words %s" % line)
                 for word in words:
                     if word not in self.ignoredWord:
                         self.ignoredWord[word] = [];
-#                        print("load %s" % word)
                     self.ignoredWord[word].append(index)
-#                    print("DEBUG: loading %s %i" % (word, index))
                 index += 1
         conf.close()
-#        print ""
 
         conf = open("../conf/desire.word.conf", "r")
         index = 0
@@ -63,7 +64,6 @@ class dealSelector:
             if line[0:1] != '#':
                 line = line.rstrip()
                 line = line.lstrip()
-#                print("DEBUG: loading desired words : %s" % line)
                 words = line.split(' ')
                 self.desiredGroup.append(len(words))
                 for word in words:
@@ -72,7 +72,6 @@ class dealSelector:
                     self.desiredWord[word].append(index)
                 index += 1
         conf.close()
-#        print ""
 
     def checkDeal(self, title, enableDebug = False):
         if title in self.ignoredTitle:
@@ -157,6 +156,10 @@ class dealSelector:
                     print("DEBUG: \"%i\" >= \"%i\"" % (indexCount[index], self.ignoredGroup[index]))
                     print("DEBUG: filtered by %i [%s]" % (index, self.ignoredInfo[index]))
                 self.filterRule = self.ignoredInfo[index]
+                if self.ignoredInfo[index] in self.ignoredInfoUsedCount:
+                    self.ignoredInfoUsedCount[self.ignoredInfo[index]] += 1
+                else:
+                    self.ignoredInfoUsedCount[self.ignoredInfo[index]] = 1
                 return False;
             else:
                 if enableDebug:

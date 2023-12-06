@@ -2,6 +2,7 @@
 
 import sys
 import os
+import json
 from urllib import request
 import urllib3
 import http.client
@@ -83,6 +84,16 @@ def record_filtered_deal(filtered_deal_hash):
         filtered_deal.write("\n")
     filtered_deal.close()
 
+def record_info_used_count(ignore_used_info_count):
+    with open("../tmp/ignore.used.info.count.json", "w+") as fp:
+        json.dump(ignore_used_info_count, fp, indent=4)
+
+def load_info_used_count():
+    try:
+        with open("../tmp/ignore.used.info.count.json") as fp:
+            return json.load(fp)
+    except Exception:
+        return None
 
 def record_new_deal(new_deal_hash):
     new_deal = open("../result/new.deal.txt", "w")
@@ -112,10 +123,9 @@ def fetch_slick_images_new(url, conn):
     imageParser.feed(html.decode("latin1"))
     return imageParser.images
 
-def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
+def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector):
     imageParser = sdImageParser()
     print("fetch_new_title_slick")
-    selector = dealSelector()
     hasNewTitle = True
     index = 1
     cur = datetime.now()
@@ -214,10 +224,9 @@ def fetch_new_title_dealwiki(old_title_hash, new_deal_hash, new_title_hash, filt
 
 
 
-def fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
+def fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector):
     imageParser = sdImageParser()
     print("fetch_new_title_brads")
-    selector = dealSelector()
     hasNewTitle = True
     index = 1
     cur = datetime.now()
@@ -265,9 +274,8 @@ def fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtere
                     filtered_deal_hash[title] = selector.filterRule
         index += 1
 
-def fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
+def fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector):
     print("fetch_new_title_sea")
-    selector = dealSelector()
     hasNewTitle = True
     index = 1
     cur = datetime.now()
@@ -410,9 +418,8 @@ def fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered
                     filtered_deal_hash[title] = selector.filter_rule
         index += 1
 
-def fetch_new_title_bens_bargains(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash):
+def fetch_new_title_bens_bargains(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector):
     print("fetch_new_title_bens_bargains")
-    selector = dealSelector()
     hasNewTitle = True
     index = 1
     cur = datetime.now()
@@ -583,32 +590,34 @@ if __name__ == "__main__":
         print_usage(sys.argv[0])
         sys.exit(2)
         
-    #reload(sys)
-    #sys.setdefaultencoding("latin1")
+    # reload(sys)
+    # sys.setdefaultencoding("latin1")
 
     old_title_hash = {}
     new_deal_hash = {}
     new_title_hash = {}
     filtered_deal_hash = {}
+    selector = dealSelector(load_info_used_count())
 
     if run_type == "web":
         load_old_title(old_title_hash)
-        fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
-        fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
-        fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
-        fetch_new_title_bens_bargains(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
-#        fetch_new_title_dealwiki(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
-#        fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
-#       fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
+        fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
+        fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
+        fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
+        fetch_new_title_bens_bargains(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
+        # fetch_new_title_dealwiki(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
+        # fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
+        # fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
     else:
         load_old_title(old_title_hash)
         train_old_title(old_title_hash, new_deal_hash, filtered_deal_hash)
-        #train_old_web(run_dir, new_deal_hash, new_title_hash, filtered_deal_hash)
+        # train_old_web(run_dir, new_deal_hash, new_title_hash, filtered_deal_hash)
 
-    #reload(sys)
-    #sys.setdefaultencoding("utf8")
+    # reload(sys)
+    # sys.setdefaultencoding("utf8")
 
     record_new_deal(new_deal_hash)
     compose_html(new_deal_hash)
     record_new_title(new_title_hash)
     record_filtered_deal(filtered_deal_hash)
+    record_info_used_count(selector.ignoredInfoUsedCount)
