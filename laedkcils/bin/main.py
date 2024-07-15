@@ -53,13 +53,11 @@ def load_old_title(old_title_hash):
     while line:
         line = line.strip()
         index = 0
-        for item in line.split("\t"):
-            if index == 0:
-                title = item
-                index = 1
-            else:
-                url = item
-                old_title_hash[title] = url
+        items = line.split("\t")
+        if len(items) == 1:
+            old_title_hash[items[0]] = "https://bensbargains.com/"
+        else:
+            old_title_hash[items[0]] = items[1]
         line = input.readline()
     input.close()
 
@@ -468,7 +466,7 @@ def fetch_new_title_bens_bargains(old_title_hash, new_deal_hash, new_title_hash,
         output.write(html)
         output.close()
 
-        parser = bensParser()
+        parser = bensParser(url)
         parser.feed(html.decode("latin1"))
         hasNewTitle = False
         for title in parser.promo_hash:

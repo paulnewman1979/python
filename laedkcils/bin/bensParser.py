@@ -16,7 +16,7 @@ class bensParser(HTMLParser):
     title = ""
     promo_hash = {}
 
-    def __init__(self):
+    def __init__(self, ben_url):
         self.promo_hash = {}
         HTMLParser.__init__(self)
     
@@ -25,6 +25,7 @@ class bensParser(HTMLParser):
         self.inProdUrl = False
         self.inDealBox = False
         self.pattern = re.compile(" +")
+        self.ben_url = ben_url
 
     def handle_starttag(self, tag, attrs):
         url=""
@@ -57,9 +58,10 @@ class bensParser(HTMLParser):
             if self.inDealTitle:
                 self.inDealTitle = False
         elif tag == "article":
-            self.promo_hash[self.title] = []
-            self.promo_hash[self.title].append(self.url)
-            self.promo_hash[self.title].append(self.prodImage)
+            title = self.title.strip().rstrip()
+            self.promo_hash[title] = []
+            self.promo_hash[title].append(self.ben_url)
+            self.promo_hash[title].append(self.prodImage)
             self.title = ""
             self.prodImage = ""
             self.inProdImage = False

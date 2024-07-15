@@ -45,8 +45,9 @@ class sdParser(HTMLParser):
         elif tag == 'div':
             self.inTitleLine = 0
         elif tag == 'a' and self.isDeal == 1:
-            self.promo_hash[self.title] = []
-            self.promo_hash[self.title].append(self.url)
+            title = self.title.strip().rstrip()
+            self.promo_hash[title] = []
+            self.promo_hash[title].append(self.url)
             self.title = ""
             self.isDeal = 0
 

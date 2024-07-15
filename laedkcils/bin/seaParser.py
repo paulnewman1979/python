@@ -71,9 +71,10 @@ class seaParser(HTMLParser):
                 self.ACount = 0
         elif tag == 'a':
             if self.inDealContent and not self.inPostText and self.ACount == 2 and self.inStrong:
-                self.promo_hash[self.title] = []
-                self.promo_hash[self.title].append(self.url)
-                self.promo_hash[self.title].append(self.prodImage)
+                title = self.title.strip().rstrip()
+                self.promo_hash[title] = []
+                self.promo_hash[title].append(self.url)
+                self.promo_hash[title].append(self.prodImage)
                 self.title = ""
                 self.inStrong = False
 
