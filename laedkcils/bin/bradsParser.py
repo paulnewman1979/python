@@ -22,68 +22,37 @@ class bradsParser(HTMLParser):
         self.promo_hash = {}
         HTMLParser.__init__(self)
     
-        self.inDealBox = False
-        self.inProdImage = False
-        self.inPostText = False
-        self.inDealContent = False
-        self.ACount = 0
-        self.inStrong = False
         self.inTitle = False
 
     def handle_starttag(self, tag, attrs):
         url=''
 
-        if tag == 'div':
+        if tag == 'img':
             for name, value in attrs:
-                if name == 'class':
-                    if value == 'row':
-                        self.inDealBox = True
-                    elif value == 'product col large-5 medium-5 small-12':
-                        self.inProdImage = True
-                    elif value == 'information col large-7 medium-7 small-12':
-                        self.inDealContent = True
-                        self.content = ''
-                    elif value == 'advertiser-disclosure-link' or value == 'flag':
-                        self.inPostText = True
-        elif tag == 'img':
-            if self.inProdImage:
-                for name, value in attrs:
-                    if name == 'style' and value == 'display: none':
-                        break;
-                    elif name == 'src':
-                        self.prodImage = value
-                        #print('DEBUG: image=%s' % self.prodImage)
+                if name == 'class' and value != 'base-image bd-image':
+                    self.prodImage = None
+                elif name == 'src':
+                    self.prodImage = value
         elif tag == 'a':
-            if self.inDealBox and self.inDealContent:
-                for name, value in attrs:
-                    if name == 'class' and value != 'go-link':
-                        break;
-                    elif name == 'href':
-                        self.url = value
+            for name, value in attrs:
+                if name == 'class' and value != '__nl text-gray-dark':
+                    self.url = None
+                elif name == 'href':
+                    self.url = value
         elif tag == 'h3':
-            if self.inDealContent:
-                self.inTitle = True
-
-    def handle_endtag(self, tag):
-        if tag == 'div':
-            if self.inPostText:
-                self.inPostText = False
-            elif self.inProdImage:
-                self.inProdImage = False
-            elif self.inDealContent:
-                self.inDealContent = False
-            elif self.inDealBox:
-                self.promo_hash[self.title] = []
-                self.promo_hash[self.title].append(self.url)
-                self.promo_hash[self.title].append(self.prodImage)
-                self.title = ''
-                self.inDealBox = False
+            for name, value in attrs:
+                if name == 'class' and value == 'd-block mt-1 mb-4 line-clamp-3 display-4':
+                    self.inTitle = True
 
     def handle_data(self, data):
         if self.inTitle:
-            #print("DEBUG: title = %s" % data)
             self.title += data
+            self.promo_hash[self.title] = []
+            self.promo_hash[self.title].append(self.url)
+            self.promo_hash[self.title].append(self.prodImage)
+            self.title = ""
             self.inTitle = False
+
 
     def handle_entityref(self, name):
         if entitydefs.has_key(name):

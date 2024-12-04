@@ -3,6 +3,7 @@
 from html.parser import HTMLParser
 import sys
 from html.entities import entitydefs
+from importlib import reload
 
 class sdParser(HTMLParser):
     inTitleLine = 0
@@ -62,8 +63,8 @@ class sdParser(HTMLParser):
             self.handle_data('&'+name+';') 
 
 if __name__ == '__main__':
-    reload(sys)
-    sys.setdefaultencoding('latin1')
+    # reload(sys)
+    # sys.setdefaultencoding('latin1')
 
     if len(sys.argv) < 2:
         print("usage: ", sys.argv[0], " filename")

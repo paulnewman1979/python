@@ -7,41 +7,28 @@ from importlib import reload
 from html.parser import HTMLParser
 import sys
 from html.entities import entitydefs
+import re
 
 class sdImageParser(HTMLParser):
-    images = []
-    inDetailImage = False
+    images = set()
     isImage = False
-    divCount = 0
 
     def __init__(self):
-        self.images = []
+        self.images = set()
         HTMLParser.__init__(self)
 
     def handle_starttag(self, tag, attrs):
-        if tag == 'div':
-            if self.divCount > 0:
-                self.divCount += 1
-            else:
-                for name, value in attrs:
-                    if name == 'class':
-                        if value == 'detailImages' or value == 'postAttachments clearfix':
-                            self.inDetailImage = True
-                            self.divCount = 1
-        elif tag == "img" and self.inDetailImage:
+        if tag == "img":
             for name, value in attrs:
                 if name == 'class':
-                    if value == 'lazyimg alternateImage' or value == 'lazyimg':
+                    if value == 'lazyImage dealImage__image':
                         self.isImage = True
-                elif self.isImage == True and name == 'data-original':
-                    self.images.append(value)
+                elif self.isImage == True and name == 'src':
+                    if re.search(".attach$", value):
+                        self.images.add(f"https://slickdeals.net{value}")
                     self.isImage = False
 
-    def handle_endtag(self, tag):
-        if tag == 'div' and self.inDetailImage:
-            self.divCount -= 1
-            if self.divCount == 0:
-                self.inDetailImage = False
+    # def handle_endtag(self, tag):
 
 if __name__ == '__main__':
     reload(sys)
@@ -58,6 +45,6 @@ if __name__ == '__main__':
             
     parser = sdImageParser()
     parser.feed(html)
-    for image in parser.images:
+    for image in list(parser.images):
         print(image)
 

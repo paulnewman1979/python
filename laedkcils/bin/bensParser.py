@@ -92,7 +92,7 @@ if __name__ == '__main__':
         html = input.read()
         input.close()
             
-        parser = bensParser()
+        parser = bensParser("https://bensbargains.com/hot/")
         parser.feed(html)
         for title in parser.promo_hash:
             print(title, "\t", parser.promo_hash[title][0], "\t", parser.promo_hash[title][1])

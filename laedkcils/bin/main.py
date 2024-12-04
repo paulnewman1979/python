@@ -122,7 +122,6 @@ def fetch_slick_images_new(url, conn):
     return imageParser.images
 
 def fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector):
-    imageParser = sdImageParser()
     print("fetch_new_title_slick")
     hasNewTitle = True
     index = 1
@@ -455,7 +454,7 @@ def fetch_new_title_bens_bargains(old_title_hash, new_deal_hash, new_title_hash,
         print("\tprocessing ", index)
         url = f"https://bensbargains.com/{index}/"
         if index == 1:
-            url = "https://bensbargains.com/"
+            url = "https://bensbargains.com/hot/"
         http_client = urllib3.PoolManager()
         resp = http_client.request("GET", url, headers=headers)
         html = resp.data
