@@ -41,7 +41,9 @@ class bradsParser(HTMLParser):
                     self.url = value
         elif tag == 'h3':
             for name, value in attrs:
-                if name == 'class' and value == 'd-block mt-1 mb-4 line-clamp-3 display-4':
+                if name == 'class' and \
+		    	(value == 'd-block mt-1 mb-4 line-clamp-3 display-4' or \
+		    	 value == 'd-block mt-1 line-clamp-3 mb-4 display-4'):
                     self.inTitle = True
 
     def handle_data(self, data):

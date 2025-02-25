@@ -24,7 +24,7 @@ class sdImageParser(HTMLParser):
                     if value == 'lazyImage dealImage__image':
                         self.isImage = True
                 elif self.isImage == True and name == 'src':
-                    if re.search(".attach$", value):
+                    if re.search(".thumb$", value):
                         self.images.add(f"https://slickdeals.net{value}")
                     self.isImage = False
 

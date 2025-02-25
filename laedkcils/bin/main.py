@@ -598,10 +598,10 @@ if __name__ == "__main__":
 
     if run_type == "web":
         load_old_title(old_title_hash)
+        fetch_new_title_bens_bargains(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
         fetch_new_title_brads(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
         fetch_new_title_slick(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
         fetch_new_title_sea(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
-        fetch_new_title_bens_bargains(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash, selector)
         # fetch_new_title_dealwiki(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
         # fetch_new_title_wallet(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
         # fetch_new_title_moon(old_title_hash, new_deal_hash, new_title_hash, filtered_deal_hash)
